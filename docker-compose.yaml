@@ -1,0 +1,32 @@
+version: '3'
+services:
+  frontend:
+    container_name: nifi-frontend
+    image: apache/nifi:latest
+    ports:
+    - ${NIFI_PORT}:${NIFI_PORT}
+    cpus: 2
+    mem_limit: 2G
+    mem_reservation: 2G
+    environment:
+      - SINGLE_USER_CREDENTIALS_USERNAME=${NIFI_USERNAME}
+      - SINGLE_USER_CREDENTIALS_PASSWORD=${NIFI_PASSWORD}
+      - NIFI_SENSITIVE_PROPS_KEY=${NIFI_KEY}
+      - NIFI_WEB_HTTPS_PORT=${NIFI_PORT}
+      - NIFI_WEB_PROXY_HOST=${NIFI_PROXY_HOST}
+    networks:
+      - nifi-net
+  
+  registry:
+    container_name: nifi-registry
+    image: apache/nifi-registry:latest
+    ports:
+      - 18080:18080
+    cpus: 1
+    mem_limit: 1G
+    mem_reservation: 1G
+    networks:
+      - nifi-net
+
+networks:
+  nifi-net:
